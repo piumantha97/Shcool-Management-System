@@ -1,6 +1,7 @@
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Date;
 import javax.swing.JOptionPane;
@@ -19,6 +20,7 @@ public class Student extends javax.swing.JFrame {
     
     Connection con =null;
 Statement stmt =null;
+ResultSet rs= null;
     /**
      * Creates new form Student
      */
@@ -59,7 +61,9 @@ Statement stmt =null;
         name = new javax.swing.JTextField();
         gender = new javax.swing.JComboBox<>();
         grade = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        submit = new javax.swing.JButton();
+        search = new javax.swing.JButton();
+        newStudent = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -133,11 +137,27 @@ Statement stmt =null;
         grade.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         grade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "1A", "1B", "1C" }));
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton1.setText("SUBMIT");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        submit.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        submit.setText("SUBMIT");
+        submit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                submitActionPerformed(evt);
+            }
+        });
+
+        search.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        search.setText("SEARCH");
+        search.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchActionPerformed(evt);
+            }
+        });
+
+        newStudent.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        newStudent.setText("NEW");
+        newStudent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newStudentActionPerformed(evt);
             }
         });
 
@@ -160,31 +180,40 @@ Statement stmt =null;
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(82, 82, 82)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(guardian, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(admission, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(number, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(129, 129, 129)
-                        .addComponent(jButton1))
                     .addComponent(gender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(birthday, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(age, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(grade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(address, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(146, Short.MAX_VALUE))
+                    .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(guardian, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(newStudent)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(number, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(130, 130, 130)
+                            .addComponent(submit))))
+                .addContainerGap(145, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(391, 391, 391))
+                .addGap(201, 201, 201)
+                .addComponent(search)
+                .addGap(85, 85, 85))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jLabel1)
-                .addGap(134, 134, 134)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(62, 62, 62)
+                        .addComponent(search)))
+                .addGap(105, 105, 105)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -224,8 +253,10 @@ Statement stmt =null;
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(number, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addContainerGap(60, Short.MAX_VALUE))
+                    .addComponent(submit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(newStudent)
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -242,7 +273,24 @@ Statement stmt =null;
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    
+    private void Reset()
+    {
+        id.setText("");
+        name.setText("");
+        address.setText("");
+        grade.setSelectedItem("");
+        age.setText("");
+        birthday.setText("");
+        gender.setSelectedItem("");
+        admission.setText("");
+        guardian.setText("");
+        number.setText("");
+        
+        
+        
+    }
+    private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
         // TODO add your handling code here:
         try{
             stmt = con.createStatement();
@@ -288,7 +336,47 @@ Statement stmt =null;
             System.out.println(e);
             
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_submitActionPerformed
+
+    private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
+        // TODO add your handling code here:
+        try{
+            stmt = con.createStatement();
+            int sId = Integer.parseInt(id.getText());
+            String query ="SELECT * FROM student";
+            rs = stmt.executeQuery(query);
+            while (rs.next())
+            {
+                if( sId == rs.getInt("id"))
+                {
+                    name.setText(rs.getString("name"));
+                    address.setText(rs.getString("address"));
+                    grade.setSelectedItem(rs.getString("grade"));
+                    age.setText(String.format("%s",rs.getInt("age")));
+                    birthday.setText(String.format("%td",rs.getDate("birthday")));
+                    gender.setSelectedItem(rs.getString("gender"));
+                    admission.setText(String.format("%td", rs.getDate("admission")));
+                    guardian.setText(rs.getString("guardian"));
+                    number.setText(String.format("%s", rs.getInt("number")));
+                    
+                    
+                }
+            }
+            
+        }
+        
+        catch(Exception e)
+        {
+            
+        }
+        
+        
+    }//GEN-LAST:event_searchActionPerformed
+
+    private void newStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newStudentActionPerformed
+        // TODO add your handling code here:
+        Reset();
+    }//GEN-LAST:event_newStudentActionPerformed
 
     /**
      * @param args the command line arguments
@@ -334,7 +422,6 @@ Statement stmt =null;
     private javax.swing.JComboBox<String> grade;
     private javax.swing.JTextField guardian;
     private javax.swing.JTextField id;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -349,6 +436,9 @@ Statement stmt =null;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField name;
+    private javax.swing.JButton newStudent;
     private javax.swing.JTextField number;
+    private javax.swing.JButton search;
+    private javax.swing.JButton submit;
     // End of variables declaration//GEN-END:variables
 }
