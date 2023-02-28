@@ -1,11 +1,14 @@
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Date;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -23,6 +26,7 @@ import javax.swing.JOptionPane;
 public class Teacher extends javax.swing.JFrame {
     Connection con =null;
 Statement stmt =null;
+ResultSet rs= null;
 
     /**
      * Creates new form Teacher
@@ -143,6 +147,11 @@ Statement stmt =null;
 
         search1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         search1.setText("SEARCH");
+        search1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                search1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -192,18 +201,15 @@ Statement stmt =null;
                             .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(74, 74, 74))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(131, 131, 131)
                         .addComponent(submit)
-                        .addContainerGap(193, Short.MAX_VALUE))))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                    .addContainerGap(554, Short.MAX_VALUE)
-                    .addComponent(search1)
-                    .addGap(36, 36, 36)))
+                        .addContainerGap(193, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(search1)
+                            .addComponent(jButton1))
+                        .addGap(46, 46, 46))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,7 +219,9 @@ Statement stmt =null;
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(22, 22, 22)
-                        .addComponent(jButton1))
+                        .addComponent(jButton1)
+                        .addGap(26, 26, 26)
+                        .addComponent(search1))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(imageIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -250,11 +258,6 @@ Statement stmt =null;
                     .addComponent(contact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(submit))
                 .addGap(58, 58, 58))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                    .addContainerGap(335, Short.MAX_VALUE)
-                    .addComponent(search1)
-                    .addGap(311, 311, 311)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -352,6 +355,35 @@ Statement stmt =null;
             System.out.println(e);
         }
     }//GEN-LAST:event_submitActionPerformed
+
+    private void search1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search1ActionPerformed
+        // TODO add your handling code here:
+        
+        try {
+            stmt =con.createStatement();
+            int sId = Integer.parseInt(id.getText());
+            String query ="SLECT * FROM teacher";
+            rs = stmt.executeQuery(query);
+            
+            while (rs.next())
+            {
+                if( sId == rs.getInt("id"))
+                {
+                    name.setText(rs.getString("name"));
+                    address.setText(rs.getString("address"));
+                    age.setText(String.format("%s",rs.getDate("birthday")));
+                    gender.setSelectedItem(rs.getString("gender"));
+                    contact.setText(String.format(0+ "%s",rs.getInt("contact") ));
+                    
+                    BufferedImage image = ImageIO.read(rs.getBinaryStream("image"));
+                    imageIcon.setIcon(new ImageIcon(image));
+                }
+            }
+        } catch (Exception e) {
+            
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_search1ActionPerformed
 
     /**
      * @param args the command line arguments
